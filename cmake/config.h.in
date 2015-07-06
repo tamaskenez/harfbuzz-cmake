@@ -1,0 +1,86 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define to 1 if you have the `atexit' function. */
+#cmakedefine HAVE_ATEXIT
+
+/* Have cairo graphics library */
+#cmakedefine HAVE_CAIRO
+
+/* Have cairo-ft support in cairo graphics library */
+#cmakedefine HAVE_CAIRO_FT
+
+/* Have Core Text backend */
+#cmakedefine HAVE_CORETEXT
+
+/* Have simple TrueType Layout backend */
+#cmakedefine HAVE_FALLBACK
+
+/* Have fontconfig library */
+#cmakedefine HAVE_FONTCONFIG
+
+/* Have FreeType 2 library */
+#cmakedefine HAVE_FREETYPE
+
+/* Define to 1 if you have the `getpagesize' function. */
+#cmakedefine HAVE_GETPAGESIZE
+
+/* Have glib2 library */
+#cmakedefine HAVE_GLIB
+
+/* Have gobject2 library */
+#cmakedefine HAVE_GOBJECT
+
+/* Have Graphite2 library */
+#cmakedefine HAVE_GRAPHITE2
+
+/* Have ICU library */
+#cmakedefine HAVE_ICU
+
+/* Have Intel __sync_* atomic primitives */
+#cmakedefine HAVE_INTEL_ATOMIC_PRIMITIVES
+
+/* Define to 1 if you have the `isatty' function. */
+#cmakedefine HAVE_ISATTY
+
+/* Define to 1 if you have the `mmap' function. */
+#cmakedefine HAVE_MMAP
+
+/* Define to 1 if you have the `mprotect' function. */
+#cmakedefine HAVE_MPROTECT
+
+/* Have native OpenType Layout backend */
+#cmakedefine HAVE_OT
+
+/* Have POSIX threads */
+#cmakedefine HAVE_PTHREAD
+
+/* Define to 1 if you have the <sched.h> header file. */
+#cmakedefine HAVE_SCHED_H
+
+/* Have sched_yield */
+#cmakedefine HAVE_SCHED_YIELD
+
+/* Have Solaris __machine_*_barrier and atomic_* operations */
+#cmakedefine HAVE_SOLARIS_ATOMIC_OPS
+
+/* Define to 1 if you have the `sysconf' function. */
+#cmakedefine HAVE_SYSCONF
+
+/* Define to 1 if you have the <sys/mman.h> header file. */
+#cmakedefine HAVE_SYS_MMAN_H
+
+/* Have UCDN Unicode functions */
+#cmakedefine HAVE_UCDN
+
+/* Have Uniscribe library */
+#cmakedefine HAVE_UNISCRIBE
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H
+
+/* Define to the full name of this package. */
+#define "@PACKAGE_NAME@"
+
+/* Define to the version of this package. */
+#define "@PACKAGE_VERSION@"
+
