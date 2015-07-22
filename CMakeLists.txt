@@ -152,7 +152,7 @@ configure_file(cmake/config.h.in config.h @ONLY)
 add_definitions(-DHAVE_CONFIG_H)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-foreach(sd src)# util test)
+foreach(sd src test)# util)
 	add_subdirectory(${sd})
 endforeach()
 

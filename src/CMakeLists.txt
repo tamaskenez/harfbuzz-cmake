@@ -167,9 +167,13 @@ add_library(libharfbuzz
     ${HBNODISTHEADERS}
     ${optional_ucnd_object_libs})
 
-target_include_directories(libharfbuzz PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${libharfbuzz_include_dirs}
+target_include_directories(libharfbuzz
+    PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}
+        ${libharfbuzz_include_dirs}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include/harfbuzz>
 )
 
 if(UNIX OR BUILD_SHARED_LIBS)
