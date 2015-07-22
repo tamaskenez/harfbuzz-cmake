@@ -135,17 +135,42 @@ if(HAVE_CORETEXT)
 endif()
 
 set(optional_ucnd_object_libs "")
+set(libharfbuzz_include_dirs "")
 if(HAVE_UCDN)
     add_subdirectory(hb-ucdn)
     set(optional_ucnd_object_libs $<TARGET_OBJECTS:libhb-ucdn>)
     list(APPEND HBSOURCES hb-ucdn.cc)
+    list(APPEND libharfbuzz_include_dirs ${CMAKE_CURRENT_SOURCE_DIR}/hb-ucdn)
 endif()
+
+foreach(root
+    hb-buffer-deserialize-json
+    hb-buffer-deserialize-text
+    hb-ot-shape-complex-indic-machine
+    hb-ot-shape-complex-myanmar-machine
+    hb-ot-shape-complex-sea-machine
+)
+    set(input "${CMAKE_CURRENT_SOURCE_DIR}/${root}.rl")
+    set(output "${CMAKE_CURRENT_BINARY_DIR}/${root}.hh")
+    add_custom_command(
+        OUTPUT "${output}"
+        COMMAND ragel -e -F1 -o "${output}" "${input}"
+        MAIN_DEPENDENCY "${input}"
+        COMMENT "Generating ${root}.hh"
+        VERBATIM
+    )
+endforeach()
 
 add_library(libharfbuzz
     ${HBSOURCES}
     ${HBHEADERS}
     ${HBNODISTHEADERS}
     ${optional_ucnd_object_libs})
+
+target_include_directories(libharfbuzz PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${libharfbuzz_include_dirs}
+)
 
 if(UNIX OR BUILD_SHARED_LIBS)
     set_target_properties(libharfbuzz PROPERTIES
@@ -165,8 +190,6 @@ endif()
 target_link_libraries(libharfbuzz
     PRIVATE ${private_deps}
     PUBLIC ${public_deps})
-
-#[===[
 
 install(FILES ${HBHEADERS} ${HBNODISTHEADERS} DESTINATION include/harfbuzz)
 
@@ -205,12 +228,11 @@ if(HAVE_GOBJECT)
         set_target_properties(libharfbuzz-gobject PROPERTIES
             VERSION ${HB_VERSION})
     endif()
-    target_link_libraries
     # install hb-gobject.h hb-gobject-structs.h ?
     # install nodist_pkginclude_HEADERS += hb-gobject-enums.h ?
 endif()
 
-# [===[
+#[===[
 GENERATORS = \
     gen-arabic-table.py \
     gen-indic-table.py \
@@ -231,13 +253,6 @@ built-sources: $(BUILT_SOURCES)
 
 .PHONY: unicode-tables arabic-table indic-table built-sources
 
-RAGEL_GENERATED = \
-    $(srcdir)/hb-buffer-deserialize-json.hh \
-    $(srcdir)/hb-buffer-deserialize-text.hh \
-    $(srcdir)/hb-ot-shape-complex-indic-machine.hh \
-    $(srcdir)/hb-ot-shape-complex-myanmar-machine.hh \
-    $(srcdir)/hb-ot-shape-complex-sea-machine.hh \
-    $(NULL)
 BUILT_SOURCES += $(RAGEL_GENERATED)
 EXTRA_DIST += \
     hb-buffer-deserialize-json.rl \
@@ -247,9 +262,6 @@ EXTRA_DIST += \
     hb-ot-shape-complex-sea-machine.rl \
     $(NULL)
 MAINTAINERCLEANFILES += $(RAGEL_GENERATED)
-$(srcdir)/%.hh: $(srcdir)/%.rl
-    $(AM_V_GEN)(cd $(srcdir) && $(RAGEL) -e -F1 -o "$*.hh" "$*.rl") \
-    || ($(RM) "$@"; false)
 
 noinst_PROGRAMS = \
     main \

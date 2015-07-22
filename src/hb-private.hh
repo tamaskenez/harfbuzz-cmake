@@ -135,7 +135,7 @@ static int errno = 0; /* Use something better? */
 #  endif
 #endif
 
-#if HAVE_ATEXIT
+#ifdef HAVE_ATEXIT
 /* atexit() is only safe to be called from shared libraries on certain
  * platforms.  Whitelist.
  * https://bugs.freedesktop.org/show_bug.cgi?id=82246 */

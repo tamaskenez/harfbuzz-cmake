@@ -1,12 +1,22 @@
 cmake_minimum_required(VERSION 3.1) # FindThreads Threads::Threads
 project(harfbuzz)
 
+# build ragel
+find_package(ragel QUIET)
+if(NOT ragel_FOUND)
+    include(cmake/CloneAndInstall.cmake)
+    clone_and_install(ragel
+        GIT_URL "https://github.com/tamaskenez/ragel-cmake.git"
+        CONFIGURATION_TYPES Release)
+    find_package(ragel REQUIRED)
+endif()
+
 set(CMAKE_DEBUG_POSTFIX _d)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 if(MSVC)
-    add_definitions(/wd4996)
+    add_definitions(/wd4996 /wd4800)
 endif()
 
 include(CMakePrintHelpers)
@@ -88,8 +98,8 @@ set(THREADS_PREFER_PTHREAD_FLAG 1)
 include(FindThreads)
 set(HAVE_PTHREAD "${CMAKE_USE_PTHREADS_INIT}")
 
-set(HAVE_OT 0) # Have native OpenType Layout backend
-set(HAVE_FALLBACK 0) # Have simple TrueType Layout backend])
+set(HAVE_OT 1) # Have native OpenType Layout backend
+set(HAVE_FALLBACK 1) # Have simple TrueType Layout backend])
 set(HAVE_GLIB 0) # --with-glib
 set(HAVE_GOBJECT 0) # --with-gobject
 #	GLIB_MKENUMS=`$PKG_CONFIG --variable=glib_mkenums glib-2.0`
@@ -139,8 +149,10 @@ endif()
 
 configure_file(src/hb-version.h.in hb-version.h @ONLY)
 configure_file(cmake/config.h.in config.h @ONLY)
+add_definitions(-DHAVE_CONFIG_H)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-foreach(sd src util test)
+foreach(sd src)# util test)
 	add_subdirectory(${sd})
 endforeach()
 
