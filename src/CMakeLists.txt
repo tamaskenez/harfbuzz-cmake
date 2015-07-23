@@ -50,7 +50,7 @@ set(HBHEADERS
     hb-shape-plan.h
     hb-unicode.h)
 set(HBNODISTHEADERS
-    hb-version.h)
+    ${PROJECT_BINARY_DIR}/hb-version.h)
 
 if(HAVE_OT)
     list(APPEND HBSOURCES
@@ -196,6 +196,16 @@ target_link_libraries(libharfbuzz
     PUBLIC ${public_deps})
 
 install(FILES ${HBHEADERS} ${HBNODISTHEADERS} DESTINATION include/harfbuzz)
+install(TARGETS libharfbuzz EXPORT harfbuzz-targets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin)
+install(EXPORT harfbuzz-targets DESTINATION lib/cmake/harfbuzz)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/hide/harfbuzz-config.cmake "
+    include(\${CMAKE_CURRENT_LIST_DIR}/harfbuzz-targets.cmake)
+    ")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/hide/harfbuzz-config.cmake
+    DESTINATION lib/cmake/harfbuzz)
 
 if(HAVE_ICU)
     add_library(libharfbuzz-icu hb-icu.cc)
