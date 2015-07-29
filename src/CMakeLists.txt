@@ -183,8 +183,8 @@ endif()
 
 if(UNIX)
     set_target_properties(libharfbuzz PROPERTIES
-        VERSION ${HB_MAJOR_VERSION}.${HB_LIBTOOL_VERSION_INFO}
-        SOVERSION ${HB_MAJOR_VERSION}
+        VERSION ${HB_VERSION_MAJOR}.${HB_LIBTOOL_VERSION_INFO}
+        SOVERSION ${HB_VERSION_MAJOR}
         )
 else()
     set_target_properties(libharfbuzz PROPERTIES
