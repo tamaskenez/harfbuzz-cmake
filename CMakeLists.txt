@@ -2,15 +2,23 @@ cmake_minimum_required(VERSION 3.1) # FindThreads Threads::Threads
 project(harfbuzz)
 
 # build ragel
-find_package(ragel QUIET)
-if(NOT ragel_FOUND)
-    include(cmake/CloneAndInstall.cmake)
-    clone_and_install(ragel
-        GIT_URL "https://github.com/tamaskenez/ragel-cmake.git"
-        CONFIGURATION_TYPES Release)
-    find_package(ragel REQUIRED)
+find_program(RAGEL_PROGRAM ragel)
+if(NOT RAGEL_PROGRAM)
+  set(ragel_install_prefix "${CMAKE_CURRENT_BINARY_DIR}/ragel-install")
+  list(APPEND CMAKE_PREFIX_PATH "${ragel_install_prefix}")
+  find_package(ragel QUIET)
+  if(NOT ragel_FOUND)
+      include(cmake/CloneAndInstall.cmake)
+      set(SAVED_CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+      set(CMAKE_INSTALL_PREFIX "${ragel_install_prefix}")
+      clone_and_install(ragel
+          GIT_URL "https://github.com/tamaskenez/ragel-cmake.git"
+          CONFIGURATION_TYPES Release)
+      find_package(ragel REQUIRED)
+      set(CMAKE_INSTALL_PREFIX "${SAVED_CMAKE_INSTALL_PREFIX}")
+  endif()
+  set(RAGEL_PROGRAM ragel)
 endif()
-
 set(CMAKE_DEBUG_POSTFIX _d)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
@@ -155,4 +163,3 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 foreach(sd src test)# util)
 	add_subdirectory(${sd})
 endforeach()
-
